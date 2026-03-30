@@ -31,6 +31,13 @@
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  --color-vibe-500: #8b5cf6;
+  --color-vibe-600: #7c3aed;
+  --color-vibe-700: #6d28d9;
+  --color-vibe-100: #ede9fe;
+  --color-vibe-50: #f5f3ff;
+  --color-school-900: #0f172a;
+  --color-school-950: #020617;
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
@@ -115,16 +122,4 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
 }
