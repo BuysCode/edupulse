@@ -1,4 +1,4 @@
-import { SignInPageComponent } from "@/components/auth/SignInPageComponent";
+import { ValidateProductSerialPageComponent } from "@/components/auth/ValidateProductSerialPageComponent";
 // import { cookies } from "next/headers";
 // import { redirect } from "next/navigation";
 
@@ -19,7 +19,7 @@ export default async function SignInPage() {
 
   return (
     <div className="flex items-center bg-gray-200 dark:bg-gray-950 justify-center w-full h-screen">
-      <SignInPageComponent />
+      <ValidateProductSerialPageComponent />
     </div>
   )
 }
