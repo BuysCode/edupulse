@@ -1,6 +1,6 @@
 "use client"
 
-import ThemeToggleButton from "../ThemeToggleButton";
+import ThemeToggleButton from "./ThemeToggleButton";
 
 export default function Header() {
   return (

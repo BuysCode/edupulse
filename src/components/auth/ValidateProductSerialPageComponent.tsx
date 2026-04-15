@@ -13,9 +13,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
 
-import { z } from "zod";
+import { handleValidateSerialCode } from "@/infra/users/users.actions";
 
-export function ValidateProductSerialPageComponent() {
+export function ValidateProductSerialPageComponent({ id }: { id: string }) {
   const router = useRouter()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -24,30 +24,22 @@ export function ValidateProductSerialPageComponent() {
     resolver: zodResolver(validateProductSerial)
   })
 
-  const submitFunc = async (data: z.infer<typeof validateProductSerial>) => {
+  const submitFunc = async (data: ValidateProductSerialT) => {
     setIsSubmitting(true)
     try {
-      const request = await fetch('/api/auth_validate_serial', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      })
-
-      if (!request.ok) {
+      handleValidateSerialCode(id, data.serial).catch(() => {
         setError('serial', { message: 'Credenciais inválidas' })
         setIsSubmitting(false)
-        return
-      }
-
-      setIsSubmitting(false)
-      return router.replace('/dashboard')
+        return;
+      }).then(() => {
+        setIsSubmitting(false)
+        return router.replace('/dashboard')
+      })
     } catch (error) {
       console.log(error)
     }
   };
+
   return (
     <div className="flex min-h-full w-120 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -73,7 +65,7 @@ export function ValidateProductSerialPageComponent() {
                 type="text"
                 required
                 {...register("serial")}
-                className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 border border-gray-300 dark:border-gray-100/20 text-gray-500 dark:text-white dark:border-gray-100/20`}
+                className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 border border-gray-300 text-gray-500 dark:text-white dark:border-gray-100/20`}
               />
             </div>
           </div>

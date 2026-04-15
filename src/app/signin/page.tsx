@@ -1,21 +1,16 @@
 import { SignInPageComponent } from "@/components/auth/SignInPageComponent";
-// import { cookies } from "next/headers";
-// import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function SignInPage() {
-  // const cookiesList = await cookies()
+  const session = await getSession({
+    headers: await headers()
+  });
 
-  // const requestUser = await fetch(`/api/profile`, {
-  //   headers: {
-  //     cookie: cookiesList.toString(),
-  //   },
-  //   cache: 'no-store',
-  //   credentials: 'include',
-  // })
-
-  // if (requestUser.ok) {
-  //   return redirect('/dashboard')
-  // }
+  if (session) {
+    return redirect("/dashboard");
+  }
 
   return (
     <div className="flex items-center bg-gray-200 dark:bg-gray-950 justify-center w-full h-screen">

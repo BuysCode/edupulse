@@ -1,19 +1,18 @@
 "use client"
 
-import { z } from "zod";
-
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signinSchema, SignInSchemaT } from "@/infra/users/users.schemas";
+import { signinSchema, type SignInSchemaT } from "@/infra/users/users.schemas";
 import { useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
+import { handleSignIn } from "@/infra/users/users.handlers";
 
 export function SignInPageComponent() {
   const router = useRouter()
@@ -24,27 +23,18 @@ export function SignInPageComponent() {
     resolver: zodResolver(signinSchema)
   })
 
-  const submitFunc = async (data: z.infer<typeof signinSchema>) => {
+  const submitFunc = async (data: SignInSchemaT) => {
     setIsSubmitting(true)
     try {
-      const request = await fetch('/api/auth_signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      })
-
-      if (!request.ok) {
-        setError('username_or_email', { message: 'Credenciais inválidas' })
+      handleSignIn(data).catch(() => {
+        setError('email', { message: 'Credenciais inválidas' })
         setError('password', { message: 'Credenciais inválidas' })
         setIsSubmitting(false)
         return
-      }
-
-      setIsSubmitting(false)
-      return router.replace('/dashboard')
+      }).then(() => {
+        setIsSubmitting(false)
+        return router.replace('/dashboard')
+      })
     } catch (error) {
       console.log(error)
     }
@@ -64,10 +54,10 @@ export function SignInPageComponent() {
             </Label>
             <div className="mt-2">
               <Input
-                id="username_or_email"
-                type="string"
+                id="email"
+                type="email"
                 required
-                {...register("username_or_email")}
+                {...register("email")}
                 className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 border border-gray-300 dark:border-gray-100/20 text-gray-500 dark:text-white dark:border-gray-100/20`}
               />
             </div>
